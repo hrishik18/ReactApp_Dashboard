@@ -92,12 +92,21 @@ async function readBlobAsJson(blobName) {
 
 // Health check
 app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    hasConnectionString: !!connectionString,
+    containerName: containerName
+  });
 });
 
 // GET /api/webhooks/dates - Get list of available dates
 app.get('/api/webhooks/dates', async (_req, res) => {
   try {
+    if (!connectionString) {
+      return res.status(500).json({ error: 'AZURE_STORAGE_CONNECTION_STRING not configured' });
+    }
+    
     const container = getContainerClient();
     const dateSet = new Set();
     
@@ -111,8 +120,8 @@ app.get('/api/webhooks/dates', async (_req, res) => {
     const dates = Array.from(dateSet).sort().reverse();
     res.json({ dates });
   } catch (error) {
-    console.error('Error fetching dates:', error);
-    res.status(500).json({ error: 'Failed to fetch dates' });
+    console.error('Error fetching dates:', error.message);
+    res.status(500).json({ error: 'Failed to fetch dates', details: error.message });
   }
 });
 

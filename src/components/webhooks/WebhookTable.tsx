@@ -74,6 +74,12 @@ export function WebhookTable({ webhooks, isLoading }: WebhookTableProps) {
               scope="col"
               className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
             >
+              Source IP
+            </th>
+            <th
+              scope="col"
+              className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >
               Conv. ID
             </th>
             <th
@@ -111,6 +117,11 @@ export function WebhookTable({ webhooks, isLoading }: WebhookTableProps) {
                 </td>
                 <td className="px-4 py-4 whitespace-nowrap">
                   <MethodBadge method={webhook.method} />
+                </td>
+                <td className="px-4 py-4 whitespace-nowrap">
+                  <span className="text-sm text-gray-600 dark:text-gray-300 font-mono">
+                    {webhook.sourceIp || '-'}
+                  </span>
                 </td>
                 <td className="px-4 py-4 whitespace-nowrap">
                   {conversationId ? (

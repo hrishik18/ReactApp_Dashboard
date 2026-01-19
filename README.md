@@ -100,17 +100,58 @@ npm run build
 
 ### Azure App Service
 
-1. Build the project:
+
+#### Prerequisites
+- Azure App Service (Node.js 20 LTS)
+- Azure Storage Account with `webhook-requests` container
+- GitHub repository connected to App Service for CI/CD
+
+#### Deployment Steps
+
+1. **Build the project:**
    ```bash
    npm run build
    ```
 
-2. Deploy using Azure CLI:
-   ```bash
-   az webapp up --name webhook-dashboard --resource-group your-rg --runtime "NODE:18-lts"
+2. **Configure GitHub Actions** (automatic deployment on push to main):
+   - Connect your GitHub repo to Azure App Service via Deployment Center
+   - GitHub Actions workflow will auto-deploy on push
+
+3. **Set Environment Variables** in Azure Portal → App Service → Settings → Environment variables:
+   ```
+   AZURE_STORAGE_CONNECTION_STRING=<your-storage-connection-string>
+   NODE_ENV=production
    ```
 
-3. Set environment variables in Azure Portal.
+4. **Configure Startup Command** in Azure Portal → App Service → Settings → Configuration:
+   ```
+   node server.prod.js
+   ```
+
+#### Manual Deployment (Azure CLI)
+
+```bash
+# Login to Azure
+az login --use-device-code
+
+# Set subscription
+az account set --subscription "<subscription-id>"
+
+# Deploy
+az webapp deploy --resource-group "MyLabResourceGroup" --name "catchr" --src-path "." --type "zip"
+
+# Set environment variables
+az webapp config appsettings set --resource-group "MyLabResourceGroup" --name "catchr" --settings AZURE_STORAGE_CONNECTION_STRING="<connection-string>"
+```
+
+## Files to Exclude from Deployment
+
+The following files/folders are not required in production:
+- `azure-logs/` - Local Azure logs
+- `dashboard_instructions.md` - Development instructions
+- `deploy.zip` - Deployment artifact
+- `*.tsbuildinfo` - TypeScript build cache
+- `vite.config.d.ts`, `vite.config.js` - Vite build artifacts
 
 ## License
 

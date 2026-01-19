@@ -39,6 +39,6 @@ export const QUERY_KEYS = {
 
 // Refresh intervals (in milliseconds)
 export const REFRESH_INTERVALS = {
-  stats: 60000, // 1 minute
-  webhookList: 30000, // 30 seconds
+  stats: 60000, // 15 seconds
+  webhookList: 3000, // 10 seconds
 } as const;

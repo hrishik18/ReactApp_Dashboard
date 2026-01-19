@@ -1,7 +1,16 @@
-const express = require('express');
-const path = require('path');
-const cors = require('cors');
-require('dotenv').config();
+import express from 'express';
+import path from 'path';
+import cors from 'cors';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import dotenv from 'dotenv';
+
+// ES module equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load environment variables
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -16,7 +25,7 @@ app.use(express.static(__dirname));
 
 // Import and use your API routes
 try {
-  const { BlobServiceClient } = require('@azure/storage-blob');
+  const { BlobServiceClient } = await import('@azure/storage-blob');
   
   if (process.env.AZURE_BLOB_CONNECTION_STRING) {
     const blobServiceClient = BlobServiceClient.fromConnectionString(
